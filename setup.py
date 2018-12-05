@@ -9,9 +9,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'hseling-api-template'
-DESCRIPTION = 'HSE Linguistics API Template.'
-URL = 'https://github.com/hseling/hseling-api-template'
+Name = 'hseling-api-universal-dependencies'
+DESCRIPTION = 'HSE Linguistics API: Universal Dependencies.'
+URL = 'https://github.com/hseling/hseling-api-universal-dependencies'
 EMAIL = 'ssobko@hse.ru'
 AUTHOR = 'Sergey Sobko'
 REQUIRES_PYTHON = '>=3.6.0'

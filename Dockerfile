@@ -15,7 +15,7 @@ COPY --from=build /usr/lib/python3.6/site-packages /usr/lib/python3.6/site-packa
 
 COPY --from=build /dependencies /dependencies
 
-COPY ./hseling_api_template /dependencies/hseling_api_template
+COPY ./hseling_api_universal_dependencies /dependencies/hseling_api_universal_dependencies
 RUN pip install /dependencies
 
 COPY ./app /app

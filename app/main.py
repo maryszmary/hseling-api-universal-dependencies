@@ -3,8 +3,8 @@ from logging import getLogger
 
 import boilerplate
 
-from hseling_api_template.process import process_data
-from hseling_api_template.query import query_data
+from hseling_api_universal_dependencies.process import process_data
+from hseling_api_universal_dependencies.query import query_data
 
 
 ALLOWED_EXTENSIONS = ['txt']

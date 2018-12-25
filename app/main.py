@@ -21,27 +21,41 @@ app.config.update(
 celery = boilerplate.make_celery(app)
 
 
+# @celery.task
+# def process_task(file_ids_list=None):
+#     files_to_process = boilerplate.list_files(recursive=True,
+#                                               prefix=boilerplate.UPLOAD_PREFIX)
+#     print(files_to_process)
+#     print(file_ids_list)
+#     if file_ids_list:
+#         print('aaa')
+#         files_to_process = [boilerplate.UPLOAD_PREFIX + file_id
+#                             for file_id in file_ids_list
+#                             if (boilerplate.UPLOAD_PREFIX + file_id)
+#                             in files_to_process]
+#     print('----*----')
+#     print(files_to_process)
+#     print('-------------')
+#     my_file = boilerplate.get_file(file_ids_list[0])
+#     print(my_file)
+#     data_to_process = {file_id[len(boilerplate.UPLOAD_PREFIX):]:
+#                        boilerplate.get_file(file_id)
+#                        for file_id in files_to_process}
+#     processed_file_ids = list()
+#     for processed_file_id, contents in process_data(data_to_process):
+#         processed_file_ids.append(
+#             boilerplate.add_processed_file(
+#                 processed_file_id,
+#                 contents,
+#                 extension='txt'
+#             ))
+#     return processed_file_ids
+
+
 @celery.task
 def process_task(file_ids_list=None):
-    files_to_process = boilerplate.list_files(recursive=True,
-                                              prefix=boilerplate.UPLOAD_PREFIX)
-    if file_ids_list:
-        files_to_process = [boilerplate.UPLOAD_PREFIX + file_id
-                            for file_id in file_ids_list
-                            if (boilerplate.UPLOAD_PREFIX + file_id)
-                            in files_to_process]
-    data_to_process = {file_id[len(boilerplate.UPLOAD_PREFIX):]:
-                       boilerplate.get_file(file_id)
-                       for file_id in files_to_process}
-    processed_file_ids = list()
-    for processed_file_id, contents in process_data(data_to_process):
-        processed_file_ids.append(
-            boilerplate.add_processed_file(
-                processed_file_id,
-                contents,
-                extension='txt'
-            ))
-    return processed_file_ids
+    file_to_process = boilerplate.get_file(file_ids_list[0])
+    return process_data(file_to_process)
 
 
 @app.route('/upload', methods=['GET', 'POST'])

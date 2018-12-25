@@ -5,6 +5,7 @@ import boilerplate
 
 from hseling_api_universal_dependencies.process import process_data
 from hseling_api_universal_dependencies.query import query_data
+from load_model import load_model
 
 
 ALLOWED_EXTENSIONS = ['txt']
@@ -19,37 +20,6 @@ app.config.update(
     CELERY_RESULT_BACKEND=boilerplate.CELERY_RESULT_BACKEND
 )
 celery = boilerplate.make_celery(app)
-
-
-# @celery.task
-# def process_task(file_ids_list=None):
-#     files_to_process = boilerplate.list_files(recursive=True,
-#                                               prefix=boilerplate.UPLOAD_PREFIX)
-#     print(files_to_process)
-#     print(file_ids_list)
-#     if file_ids_list:
-#         print('aaa')
-#         files_to_process = [boilerplate.UPLOAD_PREFIX + file_id
-#                             for file_id in file_ids_list
-#                             if (boilerplate.UPLOAD_PREFIX + file_id)
-#                             in files_to_process]
-#     print('----*----')
-#     print(files_to_process)
-#     print('-------------')
-#     my_file = boilerplate.get_file(file_ids_list[0])
-#     print(my_file)
-#     data_to_process = {file_id[len(boilerplate.UPLOAD_PREFIX):]:
-#                        boilerplate.get_file(file_id)
-#                        for file_id in files_to_process}
-#     processed_file_ids = list()
-#     for processed_file_id, contents in process_data(data_to_process):
-#         processed_file_ids.append(
-#             boilerplate.add_processed_file(
-#                 processed_file_id,
-#                 contents,
-#                 extension='txt'
-#             ))
-#     return processed_file_ids
 
 
 @celery.task
@@ -88,6 +58,8 @@ def list_files_endpoint():
 @app.route('/process')
 @app.route("/process/<file_ids>")
 def process_endpoint(file_ids=None):
+    pipeline = load_model('russian') # language harcoded so far
+    print(pipeline)
     file_ids_list = file_ids and file_ids.split(",")
     task = process_task.delay(file_ids_list)
     return jsonify({"task_id": str(task)})

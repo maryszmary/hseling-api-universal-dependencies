@@ -7,6 +7,7 @@ COPY ./requirements.txt /dependencies/requirements.txt
 COPY ./setup.py /dependencies/setup.py
 
 RUN apk add build-base
+RUN apk add libstdc++
 RUN pip install -r /dependencies/requirements.txt
 
 FROM hseling/hseling-api-base:python3.6-alpine3.7 as production

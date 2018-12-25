@@ -9,7 +9,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-Name = 'hseling-api-universal-dependencies'
+NAME = 'hseling-api-universal-dependencies'
 DESCRIPTION = 'HSE Linguistics API: Universal Dependencies.'
 URL = 'https://github.com/hseling/hseling-api-universal-dependencies'
 EMAIL = 'ssobko@hse.ru'

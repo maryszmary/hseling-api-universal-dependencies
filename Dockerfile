@@ -6,12 +6,14 @@ RUN mkdir /dependencies
 COPY ./requirements.txt /dependencies/requirements.txt
 COPY ./setup.py /dependencies/setup.py
 
-RUN apk add build-base
-RUN apk add libstdc++
+RUN apk add --no-cache build-base
+RUN apk add --no-cache libstdc++
 RUN pip install -r /dependencies/requirements.txt
 
 FROM hseling/hseling-api-base:python3.6-alpine3.7 as production
 
+RUN apk add --no-cache build-base
+RUN apk add --no-cache libstdc++
 COPY --from=build /usr/local/lib/python3.6/site-packages /usr/local/lib/python3.6/site-packages
 COPY --from=build /usr/lib/python3.6/site-packages /usr/lib/python3.6/site-packages
 

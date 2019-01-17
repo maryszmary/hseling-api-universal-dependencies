@@ -5,11 +5,15 @@ import boilerplate
 
 from hseling_api_universal_dependencies.process import process_data
 from hseling_api_universal_dependencies.query import query_data
-from load_model import load_model
 
 
 ALLOWED_EXTENSIONS = ['txt']
 
+
+MODELS_DIR = '/dependencies/hseling_api_universal_dependencies/models/'
+MODEL_NAMES = {
+    'russian': 'russian-ud-2.0-170801.udpipe'
+}
 
 log = getLogger(__name__)
 
@@ -24,8 +28,16 @@ celery = boilerplate.make_celery(app)
 
 @celery.task
 def process_task(file_ids_list=None):
-    file_to_process = boilerplate.get_file(file_ids_list[0])
-    return process_data(file_to_process)
+    from ufal.udpipe import Model, Pipeline
+    model_path = MODELS_DIR + MODEL_NAMES['russian'] # language harcoded so far 
+    model = Model.load(model_path)
+    pipeline = Pipeline(model, '', '', '', '')
+    file_to_process = boilerplate.get_file(file_ids_list[0]) # getting the content of the file
+    print('...loaded the model')
+    # parsed = pipeline.process(file_to_process.decode('utf-8'))
+    # print('...parsed the sentence')
+    # print(parsed)
+    return process_data(file_to_process, pipeline)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -58,8 +70,6 @@ def list_files_endpoint():
 @app.route('/process')
 @app.route("/process/<file_ids>")
 def process_endpoint(file_ids=None):
-    pipeline = load_model('russian') # language harcoded so far
-    print(pipeline)
     file_ids_list = file_ids and file_ids.split(",")
     task = process_task.delay(file_ids_list)
     return jsonify({"task_id": str(task)})

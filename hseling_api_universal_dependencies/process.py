@@ -2,7 +2,7 @@ from hseling_api_universal_dependencies.conllu_graphs import get_multi_sentence,
 from hseling_api_universal_dependencies.examples import hardcoded
 
 
-def process_data(contents):
+def process_data(contents, pipeline):
     """
     Process the contents of the file, which is always one sentence.
     """
@@ -11,6 +11,9 @@ def process_data(contents):
     else:
         text = contents
     sentence = text.strip()
-    ms = get_multi_sentence([sentence, hardcoded])
-    mst = get_combined([ms])
-    return mst[0]
+    parsed = pipeline.process(sentence)
+    # ms = get_multi_sentence([sentence, parsed])
+    # ms = get_multi_sentence([sentence, hardcoded])
+    # mst = get_combined([ms])
+    # return mst[0]
+    return parsed

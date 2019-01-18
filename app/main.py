@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from logging import getLogger
+from flask_cors import CORS
 
 import boilerplate
 
@@ -19,6 +20,7 @@ log = getLogger(__name__)
 
 
 app = Flask(__name__)
+CORS(app)
 app.config.update(
     CELERY_BROKER_URL=boilerplate.CELERY_BROKER_URL,
     CELERY_RESULT_BACKEND=boilerplate.CELERY_RESULT_BACKEND

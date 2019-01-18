@@ -10,3 +10,4 @@ html5lib
 beautifulsoup4
 scrapy
 ufal.udpipe
+flask-cors

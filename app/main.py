@@ -27,6 +27,15 @@ app.config.update(
 )
 celery = boilerplate.make_celery(app)
 
+@celery.task
+def process_task_stream(sentence):
+    from ufal.udpipe import Model, Pipeline
+    model_path = MODELS_DIR + MODEL_NAMES['russian'] # language harcoded so far
+    model = Model.load(model_path)
+    pipeline = Pipeline(model, '', '', '', '')
+    print('...loaded the model')
+    return process_data(sentence, pipeline)
+
 
 @celery.task
 def process_task(file_ids_list=None):
@@ -75,6 +84,16 @@ def process_endpoint(file_ids=None):
     file_ids_list = file_ids and file_ids.split(",")
     task = process_task.delay(file_ids_list)
     return jsonify({"task_id": str(task)})
+
+
+@app.route('/process_stream', methods=['GET', 'POST'])
+def process_stream_endpoint():
+    if request.method == 'POST':
+        data = request.json
+        print(data['sentence'])
+        task = process_task_stream.delay(data['sentence'])
+        return jsonify({"task_id": str(task)})
+    return jsonify({'error': 'invalid method'})
 
 
 @app.route("/query/<path:file_id>")

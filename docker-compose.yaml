@@ -17,6 +17,7 @@ x-common-variables: &common-variables
 services:
  hse-api-web:
   build: .
+  container_name: api_for_annotatrix
   ports:
    - "80:80"
   links:
